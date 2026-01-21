@@ -18,9 +18,9 @@ module pc(
         end
         
         else begin
-        if(enable)begin
-            PCF <= PCFnext;
-        end
+            if(enable)begin
+                PCF <= PCFnext;
+            end
 
         end
     end
