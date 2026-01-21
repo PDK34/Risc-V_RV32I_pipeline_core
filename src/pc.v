@@ -12,13 +12,16 @@ module pc(
     assign PCFnext = (PCSrcE == 1'b0)? PCPlus4F : PCTargetE;
 
     always@(posedge clk)begin
+        
         if(rst)begin
             PCF <= 32'b0;
         end
+        
         else begin
         if(enable)begin
             PCF <= PCFnext;
         end
+
         end
     end
 
