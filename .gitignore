@@ -1,0 +1,52 @@
+# General
+*~
+*.log
+*.bak
+*.tmp
+*.swp
+*.swo
+
+
+
+# Icarus Verilog / GTKWave
+
+*.vcd
+*.fst
+*.lxt
+*.lxt2
+*.out
+*.exe
+
+a.out
+
+# Vivado generated files
+
+# Projects
+*.xpr
+*.xise
+
+# Build dirs
+.vivado/
+.ip_user_files/
+.cache/
+.hw/
+.sim/
+.runs/
+.gen/
+
+# Simulation databases
+*.wdb
+*.pb
+*.jou
+
+# IP / block design
+*.bd
+*.hwh
+*.xsa
+*.dcp
+*.xdc
+
+
+.DS_Store
+Thumbs.db
+

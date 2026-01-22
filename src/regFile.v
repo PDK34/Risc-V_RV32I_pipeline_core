@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module regFile(
     input clk,rst,
     input [4:0] A1,A2,
