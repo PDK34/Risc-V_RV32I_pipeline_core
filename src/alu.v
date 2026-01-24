@@ -5,11 +5,11 @@ module alu (
     output zeroE
 );
 
-    localparam ADD = 3'd1,
-               SUB = 3'd2,
-               AND = 3'd3,
-               OR  = 3'd4,
-               SLT = 3'd5;
+    localparam ADD = 3'd0,
+               SUB = 3'd1,
+               AND = 3'd2,
+               OR  = 3'd3,
+               SLT = 3'd4;
 
     always@(*)begin
         ALUResultE = 32'b0;
@@ -19,7 +19,7 @@ module alu (
             AND : ALUResultE = srcAE & srcBE;
             OR  : ALUResultE = srcAE | srcBE;
             SLT : ALUResultE = ($signed(srcAE) < $signed(srcBE)) ? 32'd1 : 32'd0;      
-        
+        endcase
     end
     assign zeroE = (ALUResultE == 32'd0)? 1'b1 : 1'b0;
     
