@@ -23,9 +23,6 @@ module regFile_tb;
     always #5 clk = ~clk;
 
     initial begin
-        $dumpfile("regFile.vcd");
-        $dumpvars(0, regFile_tb);
-
 
         clk = 0;
         rst = 1;
