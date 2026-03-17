@@ -45,6 +45,30 @@ module control_signal (
                 endcase  
             end
 
+            7'b0010011 : begin  //I-type
+                aluSrcBD = 1'd1;
+                regWriteD = 1'd1;
+                resultSrcD = 2'd0;
+                case (funct3)
+                    3'b000 : begin
+                        ALUcontrolD = ADD;
+                    end 
+
+                    3'b010 : begin
+                        ALUcontrolD = SLT;
+                    end
+
+                    3'b111 : begin
+                        ALUcontrolD = AND;
+                    end
+
+                    3'b110 : begin
+                        ALUcontrolD = OR;
+                    end
+                    default: ALUcontrolD = ADD;
+                endcase  
+            end
+
             7'b0000011 : begin //Load type
                 immSrc = 2'd0;
                 aluSrcBD = 1'd1;
