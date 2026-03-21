@@ -20,31 +20,30 @@ module hazard_unit_tb;
     );
 
     initial begin
-        // init
         Rs1E=0;Rs2E=0;RdM=0;RdW=0;RdE=0;Rs1D=0;Rs2D=0;
         RegWriteM=0;RegWriteW=0;ResultSrcE=0;PCSrcE=0;
         #10;
 
-        // MEM forward to A
+        //MEM forward to A
         Rs1E=5'd3; RdM=5'd3; RegWriteM=1;
         #10; // expect forwardAE=2'b10
 
-        // WB forward to A
+        //WB forward to A
         Rs1E=5'd3; RdM=5'd7; RdW=5'd3; RegWriteW=1;
         #10; // expect forwardAE=2'b01
 
-        // no forward (x0)
+        //no forward (x0)
         Rs1E=5'd0; RdM=5'd0; RegWriteM=1;
         #10; // expect forwardAE=2'b00
 
-        // lw stall
+        //lw stall
         Rs1E=0;Rs2E=0;RdM=0;RdW=0;RegWriteM=0;RegWriteW=0;
         ResultSrcE=2'b01; RdE=5'd5; Rs1D=5'd5;
         #10; // expect StallF=1,StallD=1,FlushE=1
 
-        // branch flush
+        //branch flush
         ResultSrcE=2'b00; RdE=0; Rs1D=0; PCSrcE=1;
-        #10; // expect FlushD=1,FlushE=1
+        #10; //expect FlushD=1,FlushE=1
 
         #10 $finish;
     end
