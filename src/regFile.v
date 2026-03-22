@@ -14,7 +14,7 @@ module regFile(
     assign readData2D = (A2 == 5'b0)? 32'b0 : regs[A2];
 
     integer i;
-    always@(posedge clk)begin
+    always@(negedge clk)begin
         if(rst)begin
             for (i = 0; i<32 ;i=i+1 ) begin
                 regs[i] <= 32'b0;
