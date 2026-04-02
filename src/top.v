@@ -12,6 +12,7 @@ module top(
     wire [2:0]  ALUControlD;
     wire [1:0]  ResultSrcD, immSrc;
     wire        ALUSrcD, BranchD, JumpD, RegWriteD, MemWriteD;
+    wire [2:0] funct3E;
 
     //Execute
     wire [31:0] ReadData1E, ReadData2E, PCE, PCPlus4E, immExtendedE;
@@ -102,7 +103,8 @@ module top(
         .ALUControlE(ALUControlE),
         .ALUSrcE(ALUSrcE), .JumpE(JumpE), .BranchE(BranchE),
         .RegWriteE(RegWriteE), .MemWriteE(MemWriteE),
-        .ResultSrcE(ResultSrcE)
+        .ResultSrcE(ResultSrcE),.funct3D(instrD[14:12]),
+        .funct3E(funct3E)
     );
 
     // EXECUTE
@@ -128,8 +130,15 @@ module top(
         .ALUcontrolE(ALUControlE),
         .ALUResultE(ALUResultE), .zeroE(zeroE)
     );
+    
+    branch_decoder u_branch_decoder(
+        .funct3E(funct3E),
+        .zeroE(zeroE),
+        .ALUResultE_0(ALUResultE[0]),
+        .BranchE(BranchE),
+        .PCSrcE(PCSrcE)
+    );
 
-    assign PCSrcE   = BranchE & zeroE;
     assign PCTargetE = PCE + immExtendedE;
 
     ex_mem u_ex_mem(

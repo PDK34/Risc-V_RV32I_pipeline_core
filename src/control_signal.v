@@ -92,18 +92,20 @@ module control_signal (
                 endcase
             end     
 
-            7'b1100011 : begin //Branch type
+            7'b1100011 : begin
                 immSrc = 2'd2;
                 aluSrcBD = 1'd0;
                 memWriteD = 1'd0;
                 regWriteD = 1'd0;
                 branch = 1'd1;
                 case (funct3)
-                    3'b000 : ALUcontrolD = SUB; 
+                    3'b000 : ALUcontrolD = SUB; // beq
+                    3'b001 : ALUcontrolD = SUB; // bne
+                    3'b100 : ALUcontrolD = SLT; // blt
+                    3'b101 : ALUcontrolD = SLT; // bge
                     default: ALUcontrolD = ADD;
                 endcase
             end       
-
         endcase   
     end
 
