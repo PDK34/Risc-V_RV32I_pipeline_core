@@ -73,6 +73,4 @@ addi x31, x0, 99     # skipped, x31=0
 addi x31, x0, 1      # x31 = 1, jal target
 
 # JALR test
-addi x26, x0, 4      # reuse x26, offset for jalr
-# jalr x0, x26, 8   # jump to x26+8, discard return addr
-# (verify x30 has correct PC+4 from JAL above)
+# jalr x0, x30, 0  

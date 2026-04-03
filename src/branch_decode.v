@@ -18,7 +18,7 @@ module branch_decode (
             default: branchTaken = 1'b0;
         endcase
     end
-    assign PCSrcE = (BranchE && branchTaken)||JalrE;
+    assign PCSrcE = (BranchE && branchTaken)||JumpE;
     assign PCTargetE = JalrE?(ReadData1E+immExtendedE) : (PCE+immExtendedE);
     
 endmodule

@@ -58,6 +58,8 @@ module top_tb;
           $time, $signed(dut.u_regfile.regs[31]), dut.PCF, dut.FlushE, dut.FlushD);
         $monitor("t=%0t PCF=%0d FlushE=%b FlushD=%b StallF=%b StallD=%b",
           $time, dut.PCF, dut.FlushE, dut.FlushD, dut.StallF, dut.StallD);
+          $monitor("t=%0t PCTargetE=%0d JumpE=%b", $time, dut.PCTargetE, dut.JumpE);
+
 
 
         // ~35 instructions + stalls + pipeline drain
