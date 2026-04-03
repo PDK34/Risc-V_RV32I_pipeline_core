@@ -33,6 +33,12 @@ module top_tb;
     wire [31:0] x23 = dut.u_regfile.regs[23];
     wire [31:0] x24 = dut.u_regfile.regs[24];
     wire [31:0] x25 = dut.u_regfile.regs[25];
+    wire [31:0] x26 = dut.u_regfile.regs[26];
+    wire [31:0] x27 = dut.u_regfile.regs[27];
+    wire [31:0] x28 = dut.u_regfile.regs[28];
+    wire [31:0] x29 = dut.u_regfile.regs[29];
+    wire [31:0] x30 = dut.u_regfile.regs[30];
+    wire [31:0] x31 = dut.u_regfile.regs[31];
 
     task check;
         input [31:0] val, expected;
@@ -48,6 +54,8 @@ module top_tb;
     initial begin
         clk = 0; rst = 1;
         #12 rst = 0;
+        $monitor("t=%0t x31=%0d PCF=%0d FlushE=%b FlushD=%b",
+          $time, $signed(dut.u_regfile.regs[31]), dut.PCF, dut.FlushE, dut.FlushD);
         $monitor("t=%0t PCF=%0d FlushE=%b FlushD=%b StallF=%b StallD=%b",
           $time, dut.PCF, dut.FlushE, dut.FlushD, dut.StallF, dut.StallD);
 
@@ -81,6 +89,11 @@ module top_tb;
         check(x23, 32'd5,   23);
         check(x24, 32'd0,   24);
         check(x25, 32'd7,   25);
+        check(x26, 32'd4,  26);
+        check(x27, 32'd3,  27);
+        check(x28, 32'd6,  28);
+        check(x29, 32'd9,  29);
+        check(x31, 32'd1,  31);
 
         $display("---- Memory Check ----");
         if(dut.u_dmem.dataMem[0] !== 32'd8)

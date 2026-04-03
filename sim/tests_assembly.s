@@ -50,3 +50,29 @@ addi x13, x0, 5      # x13 = 5
 beq  x1, x13, 8      # taken
 addi x14, x0, 99     # must be skipped x14=0
 addi x15, x0, 2      # x15 = 2
+
+# bne test
+addi x26, x0, 4      # x26 = 4
+bne  x26, x1, 8      # taken (4!=5), skip next
+addi x27, x0, 99     # skipped, x27=0
+addi x27, x0, 3      # x27 = 3, branch target
+
+# blt test
+blt  x2, x1, 8       # taken (3<5), skip next
+addi x28, x0, 99     # skipped, x28=0
+addi x28, x0, 6      # x28 = 6
+
+# bge test
+bge  x1, x2, 8       # taken (5>=3), skip next
+addi x29, x0, 99     # skipped, x29=0
+addi x29, x0, 9      # x29 = 9
+
+# JAL test
+jal  x30, 8          # x30 = PC+4, jump skip next
+addi x31, x0, 99     # skipped, x31=0
+addi x31, x0, 1      # x31 = 1, jal target
+
+# JALR test
+addi x26, x0, 4      # reuse x26, offset for jalr
+# jalr x0, x26, 8   # jump to x26+8, discard return addr
+# (verify x30 has correct PC+4 from JAL above)
