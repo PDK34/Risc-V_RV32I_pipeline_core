@@ -2,8 +2,10 @@ module branch_decode (
     input [2:0] funct3E,
     input zeroE,
     input ALUResultE_0, //bit 0 of ALUResult for SLT since for SLT,only one bit result that is zero-extended
-    input BranchE,
-    output PCSrcE
+    input BranchE, JumpE,JalrE,
+    input [31:0] ReadData1E,immExtendedE,PCE,
+    output PCSrcE,
+    output [31:0] PCTargetE
 );
 
     reg branchTaken;
@@ -16,6 +18,7 @@ module branch_decode (
             default: branchTaken = 1'b0;
         endcase
     end
-    assign PCSrcE = BranchE & branchTaken;
+    assign PCSrcE = (BranchE && branchTaken)||JalrE;
+    assign PCTargetE = JalrE?(ReadData1E+immExtendedE) : (PCE+immExtendedE);
     
 endmodule

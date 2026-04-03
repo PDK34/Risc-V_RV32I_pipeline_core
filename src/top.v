@@ -86,6 +86,7 @@ module top(
     assign Rs1D = instrD[19:15];
     assign Rs2D = instrD[24:20];
 
+    wire JalrE;
     id_ex u_id_ex(
         .clk(clk), .rst(rst), .flush(FlushE),
         .ReadData1D(ReadData1D), .ReadData2D(ReadData2D),
@@ -104,7 +105,7 @@ module top(
         .ALUSrcE(ALUSrcE), .JumpE(JumpE), .BranchE(BranchE),
         .RegWriteE(RegWriteE), .MemWriteE(MemWriteE),
         .ResultSrcE(ResultSrcE),.funct3D(instrD[14:12]),
-        .funct3E(funct3E)
+        .funct3E(funct3E) ,.jalrD(instrD[6:0] == 7'b1100111),.jalrE(JalrE)
     );
 
     // EXECUTE
@@ -131,15 +132,18 @@ module top(
         .ALUResultE(ALUResultE), .zeroE(zeroE)
     );
     
-    branch_decoder u_branch_decoder(
+    
+    branch_decode u_branch_decoder(
         .funct3E(funct3E),
         .zeroE(zeroE),
         .ALUResultE_0(ALUResultE[0]),
         .BranchE(BranchE),
-        .PCSrcE(PCSrcE)
+        .PCSrcE(PCSrcE),
+        .JumpE(JumpE),
+        .JalrE(JalrE),
+        .ReadData1E(ReadData1E),.immExtendedE(immExtendedE),.PCE(PCE),.PCTargetE(PCTargetE)
     );
 
-    assign PCTargetE = PCE + immExtendedE;
 
     ex_mem u_ex_mem(
         .clk(clk), .rst(rst),

@@ -105,7 +105,20 @@ module control_signal (
                     3'b101 : ALUcontrolD = SLT; // bge
                     default: ALUcontrolD = ADD;
                 endcase
-            end       
+            end
+            7'b1101111 : begin //JAL
+                immSrc = 2'd3;
+                regWriteD = 1'b1;
+                resultSrcD = 2'b10;
+                jump = 1'b1;
+            end
+
+            7'b1100111 : begin //JALR
+                immSrc = 2'd0;
+                regWriteD = 1'b1;
+                resultSrcD = 2'b10;
+                jump = 1'b1;
+            end
         endcase   
     end
 
