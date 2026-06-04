@@ -54,7 +54,7 @@ A RISC-V pipelined processor ,following the RV32I instruction set .The project f
 - Upper immediate: lui, auipc
 - Remaining loads/stores: lb, lh, lbu, lhu, sb, sh
 - Shifts: sll, srl, sra, slli, srli, srai
-- xor, xori
+- xor, xori,sltu ,sltiu
 
 ## Reference
 
