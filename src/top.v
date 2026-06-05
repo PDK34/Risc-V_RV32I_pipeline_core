@@ -9,33 +9,35 @@ module top(
     wire [31:0] instrD, PCD, PCPlus4D;
     wire [31:0] ReadData1D, ReadData2D, immExtendedD;
     wire [4:0]  RdD, Rs1D, Rs2D;
-    wire [2:0]  ALUControlD;
-    wire [1:0]  ResultSrcD, immSrc;
+    wire [3:0]  ALUControlD;
+    wire [1:0] immSrc; 
+    wire [1:0]  ResultSrcD;
     wire        ALUSrcD, BranchD, JumpD, RegWriteD, MemWriteD;
-    wire [2:0] funct3E;
+    wire [2:0] funct3E,funct3M;
+    wire isLuiD,isLuiE;
 
     //Execute
     wire [31:0] ReadData1E, ReadData2E, PCE, PCPlus4E, immExtendedE;
     wire [4:0]  RdE, Rs1E, Rs2E;
-    wire [2:0]  ALUControlE;
+    wire [3:0]  ALUControlE;
     wire [1:0]  ResultSrcE, forwardAE, forwardBE;
     wire        ALUSrcE, BranchE, JumpE, RegWriteE, MemWriteE;
     wire [31:0] srcAE, srcBE, srcBE_pre, ALUResultE, writeDataE;
     wire        zeroE, PCSrcE;
     wire [31:0] PCTargetE;
-
+    wire [31:0] upperImmResultE;
     //Memory
     wire [31:0] ALUResultM, writeDataM, PCPlus4M, memReadDataM;
     wire [4:0]  RdM;
     wire [1:0]  ResultSrcM;
     wire        RegWriteM, MemWriteM;
-
+    wire [31:0] upperImmResultM;
     //Writeback
     wire [31:0] ALUResultW, memReadDataW, PCPlus4W, resultW;
     wire [4:0]  RdW;
     wire [1:0]  ResultSrcW;
     wire        RegWriteW;
-
+    wire [31:0] upperImmResultW;
     //Hazard_signals
     wire StallF, StallD, FlushE, FlushD;
 
@@ -66,7 +68,7 @@ module top(
         .ALUcontrolD(ALUControlD),
         .jump(JumpD), .branch(BranchD),
         .aluSrcBD(ALUSrcD), .memWriteD(MemWriteD), .regWriteD(RegWriteD),
-        .resultSrcD(ResultSrcD)
+        .resultSrcD(ResultSrcD),.isLuiD(isLuiD)
     );
 
     regFile u_regfile(
@@ -105,7 +107,7 @@ module top(
         .ALUSrcE(ALUSrcE), .JumpE(JumpE), .BranchE(BranchE),
         .RegWriteE(RegWriteE), .MemWriteE(MemWriteE),
         .ResultSrcE(ResultSrcE),.funct3D(instrD[14:12]),
-        .funct3E(funct3E) ,.jalrD(instrD[6:0] == 7'b1100111),.jalrE(JalrE)
+        .funct3E(funct3E) ,.jalrD(instrD[6:0] == 7'b1100111),.jalrE(JalrE),.isLuiD(isLuiD),.isLuiE(isLuiE)
     );
 
     // EXECUTE
@@ -125,6 +127,7 @@ module top(
     );
 
     assign writeDataE = srcBE_pre;
+    assign upperImmResultE = isLuiE ? immExtendedE : (PCE + immExtendedE) ;
 
     alu u_alu(
         .srcAE(srcAE), .srcBE(srcBE),
@@ -146,18 +149,18 @@ module top(
 
 
     ex_mem u_ex_mem(
-        .clk(clk), .rst(rst),
+        .clk(clk), .rst(rst), .funct3E(funct3E),.funct3M(funct3M),
         .ALUResultE(ALUResultE), .ResultSrcE(ResultSrcE),
         .RegWriteE(RegWriteE), .MemWriteE(MemWriteE),
         .writeDataE(writeDataE), .PCPlus4E(PCPlus4E), .RdE(RdE),
         .ALUResultM(ALUResultM), .ResultSrcM(ResultSrcM),
         .RegWriteM(RegWriteM), .MemWriteM(MemWriteM),
-        .writeDataM(writeDataM), .PCPlus4M(PCPlus4M), .RdM(RdM)
+        .writeDataM(writeDataM), .PCPlus4M(PCPlus4M), .RdM(RdM) ,.upperImmResultE(upperImmResultE) ,.upperImmResultM(upperImmResultM)
     );
 
     // MEMORY
     dmem u_dmem(
-        .clk(clk), .writeEnableM(MemWriteM),
+        .clk(clk), .writeEnableM(MemWriteM),.funct3M(funct3M),
         .addrM(ALUResultM), .writeDataM(writeDataM),
         .rdDataM(memReadDataM)
     );
@@ -169,12 +172,12 @@ module top(
         .PCPlus4M(PCPlus4M), .RdM(RdM),
         .ResultSrcW(ResultSrcW), .RegWriteW(RegWriteW),
         .ALUResultW(ALUResultW), .memReadDataW(memReadDataW),
-        .PCPlus4W(PCPlus4W), .RdW(RdW)
+        .PCPlus4W(PCPlus4W), .RdW(RdW),.upperImmResultM(upperImmResultM),.upperImmResultW(upperImmResultW)
     );
 
     // WRITEBACK
-    mux3_1 u_result(
-        .a(ALUResultW), .b(memReadDataW), .c(PCPlus4W),
+    mux4_1 u_result(
+        .a(ALUResultW), .b(memReadDataW), .c(PCPlus4W),.d(upperImmediateResultW),
         .sel(ResultSrcW), .out(resultW)
     );
 

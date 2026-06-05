@@ -6,7 +6,8 @@ module mem_wb (
     input [31:0] memReadDataM,
     input [31:0] PCPlus4M,
     input [4:0] RdM,
-
+    input [31:0] upperImmResultM,
+    output reg [31:0] upperImmResultW,
     output reg [1:0] ResultSrcW,
     output reg RegWriteW,
     output reg [31:0] ALUResultW,
@@ -18,12 +19,12 @@ module mem_wb (
         if (rst) begin
             ResultSrcW<=2'b0; RegWriteW<=1'b0;
             ALUResultW<=32'b0; memReadDataW<=32'b0; PCPlus4W<=32'b0;
-            RdW<=5'b0;
+            RdW<=5'b0; upperImmResultW <= 32'b0;
         end
         else begin 
             ResultSrcW<=ResultSrcM; RegWriteW<=RegWriteM;
             ALUResultW<=ALUResultM; memReadDataW<=memReadDataM; PCPlus4W<=PCPlus4M;
-            RdW<=RdM;
+            RdW<=RdM; upperImmResultW <= upperImmResultM;
         end
     end
 endmodule

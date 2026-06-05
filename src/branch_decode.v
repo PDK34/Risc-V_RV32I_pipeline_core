@@ -15,6 +15,8 @@ module branch_decode (
             3'b001: branchTaken = ~zeroE;
             3'b100: branchTaken = ALUResultE_0;
             3'b101: branchTaken = ~ALUResultE_0;
+            3'b110: branchTaken = ALUResultE_0;
+            3'b111: branchTaken = ~ALUResultE_0;
             default: branchTaken = 1'b0;
         endcase
     end

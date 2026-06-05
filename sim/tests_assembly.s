@@ -72,5 +72,3 @@ jal  x30, 8          # x30 = PC+4, jump skip next
 addi x31, x0, 99     # skipped, x31=0
 addi x31, x0, 1      # x31 = 1, jal target
 
-# JALR test
-# jalr x0, x30, 0  
