@@ -10,11 +10,12 @@ A RISC-V pipelined processor ,following the RV32I instruction set .The project f
 
 | Type | Instructions |
 |------|-------------|
-| R-type | add, sub, and, or, slt |
-| I-type | addi, andi, ori, slti, lw, jalr|
-| S-type | sw |
-| B-type | beq, bne, blt, bge |
+| R-type | add, sub, and, or, slt, sltu, xor, sll, srl, sra |
+| I-type | addi, andi, ori, slti, jalr, slli, srli, srai, xori, sltiu, lw, lb, lh, lbu, lhu |
+| S-type | sw, sb, sh |
+| B-type | beq, bne, blt, bge, bltu, bgeu |
 | J-type | jal |
+| U-type | lui, auipc |
 
 ## Hazard Handling
 
@@ -40,7 +41,7 @@ A RISC-V pipelined processor ,following the RV32I instruction set .The project f
 | `immExtend` | Immediate extension |
 | `branch_decode` | Branch/jump target and taken logic |
 | `hazard_unit` | Forwarding, stall, and flush control |
-| `mux2_1`, `mux3_1` | Multiplexers |
+| `mux2_1`, `mux3_1`, `mux4_1` | Multiplexers |
 | `top` | Full pipeline integration |
 
 ## Simulation Results
@@ -50,11 +51,7 @@ A RISC-V pipelined processor ,following the RV32I instruction set .The project f
 
 ## To Be Implemented
 
-- Remaining branches: bltu, bgeu
-- Upper immediate: lui, auipc
-- Remaining loads/stores: lb, lh, lbu, lhu, sb, sh
-- Shifts: sll, srl, sra, slli, srli, srai
-- xor, xori,sltu ,sltiu
+- Basic cache controller
 
 ## Reference
 
