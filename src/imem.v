@@ -16,7 +16,7 @@ module imem (
             instrMem[i] = 32'b0; //Initialize memory locations 
             
         end
-        $readmemh("tests.hex",instrMem); //Read test program
+        $readmemh("new_instr_tests.hex",instrMem); //Read test program
     end
 
     

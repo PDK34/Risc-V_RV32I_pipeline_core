@@ -10,7 +10,7 @@ module top(
     wire [31:0] ReadData1D, ReadData2D, immExtendedD;
     wire [4:0]  RdD, Rs1D, Rs2D;
     wire [3:0]  ALUControlD;
-    wire [1:0] immSrc; 
+    wire [2:0] immSrc; 
     wire [1:0]  ResultSrcD;
     wire        ALUSrcD, BranchD, JumpD, RegWriteD, MemWriteD;
     wire [2:0] funct3E,funct3M;
@@ -134,7 +134,8 @@ module top(
         .ALUcontrolE(ALUControlE),
         .ALUResultE(ALUResultE), .zeroE(zeroE)
     );
-    
+    wire [31:0] forwardResultE = (ResultSrcE == 2'b11) ? upperImmResultE : ALUResultE;
+
     
     branch_decode u_branch_decoder(
         .funct3E(funct3E),
@@ -144,13 +145,13 @@ module top(
         .PCSrcE(PCSrcE),
         .JumpE(JumpE),
         .JalrE(JalrE),
-        .ReadData1E(ReadData1E),.immExtendedE(immExtendedE),.PCE(PCE),.PCTargetE(PCTargetE)
+        .srcAE(srcAE),.immExtendedE(immExtendedE),.PCE(PCE),.PCTargetE(PCTargetE)
     );
 
 
     ex_mem u_ex_mem(
         .clk(clk), .rst(rst), .funct3E(funct3E),.funct3M(funct3M),
-        .ALUResultE(ALUResultE), .ResultSrcE(ResultSrcE),
+        .ALUResultE(forwardResultE), .ResultSrcE(ResultSrcE),
         .RegWriteE(RegWriteE), .MemWriteE(MemWriteE),
         .writeDataE(writeDataE), .PCPlus4E(PCPlus4E), .RdE(RdE),
         .ALUResultM(ALUResultM), .ResultSrcM(ResultSrcM),
@@ -175,9 +176,10 @@ module top(
         .PCPlus4W(PCPlus4W), .RdW(RdW),.upperImmResultM(upperImmResultM),.upperImmResultW(upperImmResultW)
     );
 
+
     // WRITEBACK
     mux4_1 u_result(
-        .a(ALUResultW), .b(memReadDataW), .c(PCPlus4W),.d(upperImmediateResultW),
+        .a(ALUResultW), .b(memReadDataW), .c(PCPlus4W),.d(upperImmResultW),
         .sel(ResultSrcW), .out(resultW)
     );
 

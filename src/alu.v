@@ -15,6 +15,8 @@ module alu (
                SRL = 4'd7,
                SRA = 4'd8,
                SLTU = 4'd9;
+               
+    wire signed [31:0] srcAE_signed = srcAE;
 
     always@(*)begin
         ALUResultE = 32'b0;
@@ -27,7 +29,7 @@ module alu (
             XOR : ALUResultE = srcAE^srcBE;
             SLL : ALUResultE = srcAE << srcBE[4:0];
             SRL : ALUResultE = srcAE >> srcBE[4:0];
-            SRA : ALUResultE = $signed(srcAE) >> srcBE[4:0];
+            SRA : ALUResultE = srcAE_signed >>> srcBE[4:0];
             SLTU : ALUResultE = srcAE < srcBE ? 32'd1 : 32'd0;
         endcase
     end
